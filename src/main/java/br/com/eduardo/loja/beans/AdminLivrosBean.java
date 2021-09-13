@@ -1,5 +1,6 @@
 package br.com.eduardo.loja.beans;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +9,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.Part;
 import javax.transaction.Transactional;
 
 import br.com.eduardo.loja.daos.AutorDao;
 import br.com.eduardo.loja.daos.LivroDao;
+import br.com.eduardo.loja.infra.FileSaver;
 import br.com.eduardo.loja.models.Autor;
 import br.com.eduardo.loja.models.Livro;
 
@@ -28,22 +31,22 @@ public class AdminLivrosBean {
 	@Inject
 	private FacesContext context;
 	
-	private List<Integer> autoresId = new ArrayList<>();
+	//Part para receber arquivo
+	private Part capaLivro;
 
 	@Transactional
-	public String salvar() {
-		for(Integer autorId : getAutoresId()) {
-			livro.getAutores().add(new Autor(autorId));
-		}
-		
+	public String salvar() throws IOException {
 		dao.salvar(livro);
+		
+		FileSaver fileSaver = new FileSaver();
+		livro.setCapaPath(fileSaver.write(capaLivro, "livros"));
 		
 		context.getExternalContext().getFlash().setKeepMessages(true);
 		context.addMessage(null, new FacesMessage("Livro cadastrado com sucesso!"));
 		
 		return "/livros/lista?faces-redirect=true";
 	}
-	
+
 	public List<Autor> getAutores(){
 		return autorDao.listar();
 	}
@@ -56,12 +59,13 @@ public class AdminLivrosBean {
 		this.livro = livro;
 	}
 
-	public List<Integer> getAutoresId() {
-		return autoresId;
+	public Part getCapaLivro() {
+		return capaLivro;
 	}
 
-	public void setAutoresId(List<Integer> autoresId) {
-		this.autoresId = autoresId;
+	public void setCapaLivro(Part capaLivro) {
+		this.capaLivro = capaLivro;
 	}
+
 
 }
