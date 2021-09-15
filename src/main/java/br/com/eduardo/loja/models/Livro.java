@@ -115,6 +115,13 @@ public class Livro {
 	public void setCapaPath(String capaPath) {
 		this.capaPath = capaPath;
 	}
-
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
 	
 }
