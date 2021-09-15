@@ -10,7 +10,7 @@ import br.com.eduardo.loja.daos.LivroDao;
 import br.com.eduardo.loja.models.Livro;
 
 @Model //a anotação model substitui o "named + requestScoped"
-public class adminListaLivrosBean {
+public class AdminListaLivrosBean {
 
 	@Inject
 	private LivroDao dao;
